@@ -32,3 +32,10 @@ class UserForm(forms.Form):
         if data['password'] != data['password_rep']:
             raise forms.ValidationError('Wprowadzone hasła nie pasują do siebie')
         return data
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['sex', 'age', 'height', 'weight']
+

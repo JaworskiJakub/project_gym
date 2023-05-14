@@ -6,6 +6,7 @@ from .models import *
 from .forms import *
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 
 
 class IndexView(View):
@@ -43,3 +44,38 @@ class CreateUserView(FormView):
             email=form.cleaned_data['email']
         )
         return super().form_valid(form)
+
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('index')
+        else:
+            profile_form = ProfileForm(instance=request.user.profile)
+        return render(request, 'profile.html', {
+            'profile_form': profile_form
+        })
+    else:
+        profile_form = ProfileForm(instance=request.user.profile)
+    return render(request, 'profile.html', {
+        'profile_form': profile_form
+    })
+
+
+@login_required
+def profile_info(request):
+    if request.method == 'GET':
+        user_id = request.user.id
+        user = User.objects.get(pk=user_id)
+        ctx = {
+            'user': user
+        }
+        return render(request, 'profile_info.html', ctx)
+
+
+
+
+
