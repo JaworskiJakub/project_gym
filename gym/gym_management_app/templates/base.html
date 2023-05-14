@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <style>
+    </style>
+</head>
+<body>
+<h2>GYM APP</h2>
+{% block content %}
+{% endblock %}
+<br>
+<footer>
+    {% if request.user.is_authenticated %}
+        Logged user:
+        <b>{{ request.user.username }}</b>
+        <button><a href="{% url 'logout' %}">Logout</a></button>
+        <button><a href="{% url 'index' %}">Main page</a></button>
+    {% else %}
+        <button><a href="{% url 'login' %}">Login</a></button>
+        <button><a href="{% url 'add_user' %}">Create account</a></button>
+        <button><a href="{% url 'index' %}">Main page</a></button>
+    {% endif %}
+</footer>
+</body>
+</html>
