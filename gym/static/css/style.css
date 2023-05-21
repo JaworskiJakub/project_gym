@@ -1,0 +1,38 @@
+.menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gym-name {
+    padding-left: 20px;
+}
+
+.main-buttons {
+    padding: 20px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    padding: 5px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.main-page {
+    display: flex;
+}
+
+.user-menu {
+    width: 15%;
+}
+
+.main-content {
+    width: 60%;
+    text-align: center;
+}

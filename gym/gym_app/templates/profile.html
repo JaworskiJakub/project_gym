@@ -3,6 +3,7 @@
 {% block content %}
 <form method="post">
   {% csrf_token %}
+  <p>Input profile data:</p>
   {{ user_form.as_p }}
   {{ profile_form.as_p }}
   <button type="submit">Save changes</button>

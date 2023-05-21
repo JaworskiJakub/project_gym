@@ -1,26 +1,47 @@
+{% load static %}
+
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <style>
-    </style>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
 </head>
 <body>
-<h2>GYM APP</h2>
-{% block content %}
-{% endblock %}
-<br>
-<footer>
+<div class="menu">
     {% if request.user.is_authenticated %}
-        Logged user:
-        <b>{{ request.user.username }}</b>
-        <button><a href="{% url 'logout' %}">Logout</a></button>
-        <button><a href="{% url 'index' %}">Main page</a></button>
+        <div class="gym-name">
+            <h2>CrossBox Gym</h2>
+        </div>
+        <div class="main-buttons">
+            Logged user:
+            <b>{{ request.user.username }}</b>
+            <button><a href="{% url 'logout' %}">Logout</a></button>
+            <button><a href="{% url 'index' %}">Main page</a></button>
+        </div>
     {% else %}
-        <button><a href="{% url 'login' %}">Login</a></button>
-        <button><a href="{% url 'add_user' %}">Create account</a></button>
-        <button><a href="{% url 'index' %}">Main page</a></button>
+        <div class="gym-name">
+            <h2>CrossBox Gym</h2>
+        </div>
+        <div class="main-buttons">
+            <button><a href="{% url 'login' %}">Login</a></button>
+            <button><a href="{% url 'add_user' %}">Create account</a></button>
+            <button><a href="{% url 'index' %}">Main page</a></button>
+        </div>
     {% endif %}
-</footer>
+</div>
+<div class="main-page">
+    <div class="user-menu">
+        {% if request.user.is_authenticated %}
+            <ul>
+                <li><button><a href="{% url 'update_profile' %}">Update profile</a></button></li>
+                <li><button><a href="{% url 'profile_info' %}">Profile info</a></button></li>
+            </ul>
+        {% endif %}
+    </div>
+    <div class="main-content">
+    {% block content %}
+    {% endblock %}
+    </div>
+</div>
 </body>
 </html>
