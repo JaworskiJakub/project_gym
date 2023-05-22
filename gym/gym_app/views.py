@@ -32,7 +32,7 @@ class LogoutView(View):
 
 class CreateUserView(FormView):
     form_class = UserForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('login')
     template_name = 'create_user.html'
 
     def form_valid(self, form):
@@ -76,6 +76,23 @@ def profile_info(request):
         return render(request, 'profile_info.html', ctx)
 
 
+class TrainingAddView(View):
+    def get(self, request):
+        form = TrainingForm()
+        ctx = {
+            'form': form
+        }
+        return render(request, 'add_training.html', ctx)
+
+    def post(self, request):
+        form = TrainingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+        ctx = {
+            'form': form
+        }
+        return render(request, 'add_training.html', ctx)
 
 
 

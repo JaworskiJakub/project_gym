@@ -43,5 +43,10 @@
     {% endblock %}
     </div>
 </div>
+<div>
+    {% if perms.gym_app.add_training %}
+        <a href="{% url 'add_training' %}">Add new training</a>
+    {% endif %}
+</div>
 </body>
 </html>

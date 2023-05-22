@@ -39,3 +39,9 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['sex', 'age', 'height', 'weight']
 
+
+class TrainingForm(forms.ModelForm):
+    class Meta:
+        model = Training
+        fields = '__all__'
+

@@ -28,3 +28,18 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 
+class Training(models.Model):
+    name = models.CharField(max_length=128)
+    description = models.TextField(max_length=512)
+    trainers = models.ManyToManyField(User)
+    date = models.DateField
+    time = models.TimeField
+
+
+trainer_group, created = Group.objects.get_or_create(name='Trainer')
+
+trainer_group.permissions.add(29)
+
+User.objects.get(username='test_trainer').groups.add(trainer_group)
+
+

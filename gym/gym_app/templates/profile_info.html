@@ -3,4 +3,9 @@
 {% block content %}
     <h2>User profile information:</h2>
     <p>First name: <b>{{ user.first_name }}</b></p>
+    <p>Last name: <b>{{ user.last_name }}</b></p>
+    <p>Sex: <b>{{ user.profile.get_sex_display }}</b></p>
+    <p>Age: <b>{{ user.profile.age }}</b></p>
+    <p>Height: <b>{{ user.profile.height }} cm</b></p>
+    <p>Weight: <b>{{ user.profile.weight }} kg</b></p>
 {% endblock %}
