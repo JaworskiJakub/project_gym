@@ -29,11 +29,11 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 class Training(models.Model):
-    name = models.CharField(max_length=128)
-    description = models.TextField(max_length=512)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
     trainers = models.ManyToManyField(User)
-    date = models.DateField
-    time = models.TimeField
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
 
 
 trainer_group, created = Group.objects.get_or_create(name='Trainer')
