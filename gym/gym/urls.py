@@ -27,5 +27,6 @@ urlpatterns = [
     path('profile/', update_profile, name='update_profile'),
     path('profile_info/', profile_info, name='profile_info'),
     path('add_training/', TrainingAddView.as_view(), name='add_training'),
-    path('calendar/', CalendarView.as_view(), name='calendar')
+    path('calendar/', CalendarView.as_view(), name='calendar'),
+    path('calendar/training/<int:id>/', TrainingView.as_view(), name='training_details')
 ]

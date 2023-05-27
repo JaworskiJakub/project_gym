@@ -12,7 +12,7 @@ class Calendar(HTMLCalendar):
         trainings_per_day = trainings.filter(start_time__day=day)
         d = ''
         for training in trainings_per_day:
-            d += f'<li> {training.title} </li>'
+            d += f'<li><a href="training/{training.id}/">{training.title}</a></li>'
 
         if day != 0:
             return f'<td><span class="date">{day}</span><ul> {d} </ul></td>'

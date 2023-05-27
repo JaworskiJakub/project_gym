@@ -139,3 +139,12 @@ def next_month(d):
     next_month = last + timedelta(days=1)
     month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
     return month
+
+
+class TrainingView(View):
+    def get(self, request, id):
+        training = Training.objects.get(pk=id)
+        ctx = {
+            'training': training
+        }
+        return render(request, 'training_details.html', ctx)

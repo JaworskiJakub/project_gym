@@ -10,43 +10,41 @@
 <div class="menu">
     {% if request.user.is_authenticated %}
         <div class="gym-name">
-            <h2>CrossBox Gym</h2>
+            <h2><a href="{% url 'index' %}">CrossBox Gym</a></h2>
+            <button><a href="{% url 'calendar' %}">CALENDAR</a></button>
         </div>
         <div class="main-buttons">
             Logged user:
             <b>{{ request.user.username }}</b>
             <button><a href="{% url 'logout' %}">Logout</a></button>
-            <button><a href="{% url 'index' %}">Main page</a></button>
         </div>
     {% else %}
         <div class="gym-name">
-            <h2>CrossBox Gym</h2>
+            <h2><a href="{% url 'index' %}">CrossBox Gym</a></h2>
+            <button><a href="{% url 'calendar' %}">CALENDAR</a></button>
         </div>
         <div class="main-buttons">
             <button><a href="{% url 'login' %}">Login</a></button>
             <button><a href="{% url 'add_user' %}">Create account</a></button>
-            <button><a href="{% url 'index' %}">Main page</a></button>
         </div>
     {% endif %}
 </div>
 <div class="main-page">
     <div class="user-menu">
+    <ul>
         {% if request.user.is_authenticated %}
-            <ul>
-                <li><button><a href="{% url 'update_profile' %}">Update profile</a></button></li>
-                <li><button><a href="{% url 'profile_info' %}">Profile info</a></button></li>
-            </ul>
+            <li><button><a href="{% url 'update_profile' %}">Update profile</a></button></li>
+            <li><button><a href="{% url 'profile_info' %}">Profile info</a></button></li>
+            {% if perms.gym_app.add_training %}
+                <li><button><a href="{% url 'add_training' %}">New training</a></button></li>
+            {% endif %}
         {% endif %}
+    </ul>
     </div>
     <div class="main-content">
     {% block content %}
     {% endblock %}
     </div>
-</div>
-<div>
-    {% if perms.gym_app.add_training %}
-        <a href="{% url 'add_training' %}">Add new training</a>
-    {% endif %}
 </div>
 {% block calendar %}
 {% endblock %}

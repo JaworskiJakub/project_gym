@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>TRENING: <b>{{ training.title }}</b></h2>
+    <p>DESCRIPTION: <b>{{ training.description }}</b></p>
+    <p>START: <b>{{ training.start_time }}</b></p>
+    <p>END: <b>{{ training.end_time }}</b></p>
+    <p>TRAINERS: <b>{{ training.trainers.name }}</b></p>
+{% endblock %}

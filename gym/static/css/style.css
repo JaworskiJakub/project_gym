@@ -6,6 +6,7 @@
 
 .gym-name {
     padding-left: 20px;
+    display: flex;
 }
 
 .main-buttons {
@@ -22,6 +23,7 @@ li {
 
 a {
     text-decoration: none;
+    padding: 5px;
 }
 
 .main-page {
