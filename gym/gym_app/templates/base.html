@@ -35,8 +35,13 @@
         {% if request.user.is_authenticated %}
             <li><button><a href="{% url 'update_profile' %}">Update profile</a></button></li>
             <li><button><a href="{% url 'profile_info' %}">Profile info</a></button></li>
+            <li><button><a href="{% url 'membership_success' %}">Membership info</a></button></li>
+            <li><button><a href="{% url 'purchase_membership' %}">Purchase Membership</a></button></li>
             {% if perms.gym_app.add_training %}
                 <li><button><a href="{% url 'add_training' %}">New training</a></button></li>
+            {% endif %}
+            {% if perms.gym_app.view_membershiphistory %}
+                <li><button><a href="{% url 'membership_history' %}">Memberships</a></button></li>
             {% endif %}
         {% endif %}
     </ul>

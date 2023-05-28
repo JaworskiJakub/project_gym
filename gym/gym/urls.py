@@ -28,5 +28,8 @@ urlpatterns = [
     path('profile_info/', profile_info, name='profile_info'),
     path('add_training/', TrainingAddView.as_view(), name='add_training'),
     path('calendar/', CalendarView.as_view(), name='calendar'),
-    path('calendar/training/<int:id>/', TrainingView.as_view(), name='training_details')
+    path('calendar/training/<int:id>/', TrainingView.as_view(), name='training_details'),
+    path('purchase/', PurchaseMembership.as_view(), name='purchase_membership'),
+    path('purchase_success/', membership_success, name='membership_success'),
+    path('membership_history/', membership_history, name='membership_history')
 ]

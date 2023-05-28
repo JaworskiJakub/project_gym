@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Membership history</h1>
+<form method="post">
+  {% csrf_token %}
+  <label for="selected_date">Choose date:</label>
+  <input type="date" name="selected_date" id="selected_date">
+  <button type="submit">Filtr</button>
+</form>
+<br>
+<table>
+  <tr>
+    <th>User</th>
+    <th>Membership</th>
+    <th>Purchase date</th>
+  </tr>
+  {% for h in history %}
+    <tr>
+      <td>{{ h.user_membership.user.username }}</td>
+      <td>{{ h.membership.name }}</td>
+      <td>{{ h.purchase_date }}</td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

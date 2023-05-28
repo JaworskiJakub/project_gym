@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Choose membership:</h1>
+<form action="" method="post">
+  {% csrf_token %}
+  <select name="membership">
+    {% for membership in memberships %}
+      <option value="{{ membership.id }}">{{ membership.name }} - {{ membership.price }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Buy</button>
+</form>
+{% endblock %}

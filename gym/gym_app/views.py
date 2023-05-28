@@ -6,11 +6,12 @@ from .models import *
 from .forms import *
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from .utils import Calendar
 from datetime import datetime, timedelta, date
 from django.utils.safestring import mark_safe
 import calendar
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class IndexView(View):
@@ -148,3 +149,44 @@ class TrainingView(View):
             'training': training
         }
         return render(request, 'training_details.html', ctx)
+
+
+class PurchaseMembership(LoginRequiredMixin, View):
+    login_url = "login"
+    redirect_field_name = "purchase_membership"
+
+    def get(self, request):
+        memberships = Membership.objects.all()
+        return render(request, 'purchase_membership.html', {'memberships': memberships})
+
+    def post(self, request):
+        user_profile, created = UserMembership.objects.get_or_create(user=request.user)
+        selected_membership_id = request.POST.get('membership')
+        selected_membership = Membership.objects.get(pk=selected_membership_id)
+        user_profile.membership = selected_membership
+        if user_profile.expiration_date and user_profile.expiration_date > timezone.now().date():
+            user_profile.expiration_date += timezone.timedelta(days=selected_membership.duration)
+        else:
+            user_profile.expiration_date = timezone.now().date() + timezone.timedelta(
+                days=selected_membership.duration)
+        user_profile.save()
+        MembershipHistory.objects.create(user_membership=user_profile, membership=selected_membership)
+        return redirect('membership_success')
+
+
+@login_required
+def membership_success(request):
+    user_profile = UserMembership.objects.get(user=request.user)
+    return render(request, 'membership_success.html', {'user_profile': user_profile})
+
+
+@permission_required('gym_app.view_membershiphistory')
+def membership_history(request):
+    if request.method == 'POST':
+        selected_date = request.POST.get('selected_date')
+        history = MembershipHistory.objects.filter(purchase_date=selected_date)
+    else:
+        history = MembershipHistory.objects.all()
+
+    return render(request, 'membership_history.html', {'history': history})
+
