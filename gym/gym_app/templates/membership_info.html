@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <p>Your membership is valid until: <b>{{ user_profile.expiration_date }}</b></p>
+
+    <p>Membership history:</p>
+    {% for h in history %}
+        <p>Membership: <b>{{ h.membership }}</b>,purchase date: <b>{{ h.purchase_date }}</b></p>
+    {% empty %}
+        <p>No history</p>
+    {% endfor %}
+{% endblock %}

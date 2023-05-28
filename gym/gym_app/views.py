@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.views import View, generic
@@ -180,6 +180,20 @@ def membership_success(request):
     return render(request, 'membership_success.html', {'user_profile': user_profile})
 
 
+@login_required
+def membership_info(request):
+    try:
+        user_profile = UserMembership.objects.get(user=request.user)
+    except UserMembership.DoesNotExist:
+        return HttpResponse('Membership does not exist.')
+    history = MembershipHistory.objects.filter(user_membership__user=request.user)
+    ctx = {
+        'user_profile': user_profile,
+        'history': history
+    }
+    return render(request, 'membership_info.html', ctx)
+
+
 @permission_required('gym_app.view_membershiphistory')
 def membership_history(request):
     if request.method == 'POST':
@@ -189,4 +203,41 @@ def membership_history(request):
         history = MembershipHistory.objects.all()
 
     return render(request, 'membership_history.html', {'history': history})
+
+
+class TrainingRegisterView(LoginRequiredMixin, View):
+    login_url = "login"
+
+    def get(self, request, id):
+        training = get_object_or_404(Training, pk=id)
+        initial_data = {
+            'training_id': id,
+        }
+        form = TrainingRegistrationForm(initial=initial_data)
+        return render(request, 'training_register.html', {'form': form, 'training': training})
+
+    def post(self, request, id):
+        form = TrainingRegistrationForm(request.POST)
+        training = get_object_or_404(Training, pk=id)
+
+        has_active_membership = UserMembership.objects.filter(user=request.user,
+                                                              expiration_date__gte=timezone.now().date()).exists()
+        if not has_active_membership:
+            return redirect('purchase_membership')
+
+        is_registered = training.registered_users.filter(id=request.user.id).exists()
+        if is_registered:
+            return HttpResponse('You are already enrolled!')
+
+        if form.is_valid():
+            user = request.user
+            training.registered_users.add(user)
+            if training.capacity > 0:
+                training.capacity -= 1
+                training.save()
+            else:
+                HttpResponse('Training is full!')
+            return redirect('index')
+        else:
+            return render(request, 'training_register.html', {'form': form, 'training': training})
 

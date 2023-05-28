@@ -31,5 +31,7 @@ urlpatterns = [
     path('calendar/training/<int:id>/', TrainingView.as_view(), name='training_details'),
     path('purchase/', PurchaseMembership.as_view(), name='purchase_membership'),
     path('purchase_success/', membership_success, name='membership_success'),
-    path('membership_history/', membership_history, name='membership_history')
+    path('membership_history/', membership_history, name='membership_history'),
+    path('membership_info/', membership_info, name='membership_info'),
+    path('register_training/<int:id>/', TrainingRegisterView.as_view(), name='training_register')
 ]

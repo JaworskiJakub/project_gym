@@ -6,4 +6,8 @@
     <p>START: <b>{{ training.start_time }}</b></p>
     <p>END: <b>{{ training.end_time }}</b></p>
     <p>TRAINERS: <b>{{ training.trainers.name }}</b></p>
+    <p>FREE SPOTS: <b>{{ training.capacity }}</b></p>
+    <br/>
+    <p>Click below to enroll for training</p>
+    <button><a href="{% url 'training_register' training.id %}">Enroll</a></button>
 {% endblock %}

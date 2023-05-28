@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <p>Your membership is valid until: {{ user_profile.expiration_date }}</p>
+    <h1>Membership purchased successfully!</h1>
+    <p>Your membership is valid until: <b>{{ user_profile.expiration_date }}</b></p>
 {% endblock %}

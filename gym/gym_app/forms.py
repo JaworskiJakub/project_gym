@@ -43,9 +43,23 @@ class ProfileForm(forms.ModelForm):
 class TrainingForm(forms.ModelForm):
     class Meta:
         model = Training
-        fields = '__all__'
+        fields = ('title', 'description', 'trainers', 'capacity', 'start_time', 'end_time')
         widgets = {
             'start_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'end_time': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'trainers': forms.CheckboxSelectMultiple,
         }
+
+
+class TrainingRegistrationForm(forms.Form):
+    training_id = forms.IntegerField(widget=forms.HiddenInput)
+
+    def clean_training_id(self):
+        training_id = self.cleaned_data.get('training_id')
+        try:
+            training = Training.objects.get(pk=training_id)
+        except Training.DoesNotExist:
+            raise forms.ValidationError('Invalid training')
+        return training_id
+
 
