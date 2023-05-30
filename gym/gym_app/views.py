@@ -11,15 +11,20 @@ from .utils import Calendar
 from datetime import datetime, timedelta, date
 from django.utils.safestring import mark_safe
 import calendar
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+import datetime
 
 
 class IndexView(View):
+    """Returns the index view of the application."""
+
     def get(self, request):
         return render(request, 'index.html')
 
 
 class LoginView(FormView):
+    """Enables the user to login. If the login is successful, the uer is redirected to index page."""
+
     form_class = LoginForm
     success_url = reverse_lazy('index')
     template_name = 'login.html'
@@ -30,12 +35,17 @@ class LoginView(FormView):
 
 
 class LogoutView(View):
+    """Enables the user to logout."""
+
     def get(self,  request):
         logout(request)
         return redirect('index')
 
 
 class CreateUserView(FormView):
+    """A class used to let  the user create an account. If the account creation is successful,
+     user is redirected to login page. """
+
     form_class = UserForm
     success_url = reverse_lazy('login')
     template_name = 'create_user.html'
@@ -53,6 +63,8 @@ class CreateUserView(FormView):
 
 @login_required
 def update_profile(request):
+    """Requires the user to be logged in. Enables user to set additional information about his profile."""
+
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
         if profile_form.is_valid():
@@ -72,6 +84,8 @@ def update_profile(request):
 
 @login_required
 def profile_info(request):
+    """Requires the user to be logged in. Return the user profile information."""
+
     if request.method == 'GET':
         user_id = request.user.id
         user = User.objects.get(pk=user_id)
@@ -81,7 +95,12 @@ def profile_info(request):
         return render(request, 'profile_info.html', ctx)
 
 
-class TrainingAddView(View):
+class TrainingAddView(PermissionRequiredMixin, View):
+    """The user needs to have the 'add_training' permission to access this view.
+    The class provides the form to create new training."""
+
+    permission_required = ('gym_app.add_training',)
+
     def get(self, request):
         form = TrainingForm()
         ctx = {
@@ -101,6 +120,9 @@ class TrainingAddView(View):
 
 
 class CalendarView(generic.ListView):
+    """Returns the calendar of the current month with the trainings that are planned.
+     Enables user to check next  or previous months."""
+
     model = Training
     template_name = 'calendar.html'
 
@@ -124,7 +146,7 @@ def get_date(req_day):
         year, month = (int(x) for x in req_day.split('-'))
         return date(year, month, day=1)
     else:
-        return datetime.today()
+        return date.today()
 
 
 def prev_month(d):
@@ -143,6 +165,8 @@ def next_month(d):
 
 
 class TrainingView(View):
+    """Returns the page with training details. Training ID has to be given in the URL."""
+
     def get(self, request, id):
         training = Training.objects.get(pk=id)
         ctx = {
@@ -152,6 +176,10 @@ class TrainingView(View):
 
 
 class PurchaseMembership(LoginRequiredMixin, View):
+    """Login is required for this view. The class allows the user to choose the membership option,
+     checks what is the actual user membership status and extend the actual membership by chosen duration or start
+     new membership from actual date."""
+
     login_url = "login"
     redirect_field_name = "purchase_membership"
 
@@ -176,12 +204,16 @@ class PurchaseMembership(LoginRequiredMixin, View):
 
 @login_required
 def membership_success(request):
+    """Login is required. Shows the actual membership information."""
+
     user_profile = UserMembership.objects.get(user=request.user)
     return render(request, 'membership_success.html', {'user_profile': user_profile})
 
 
 @login_required
 def membership_info(request):
+    """Shows the actual membership expiration date and the membership purchase history."""
+
     try:
         user_profile = UserMembership.objects.get(user=request.user)
     except UserMembership.DoesNotExist:
@@ -196,6 +228,9 @@ def membership_info(request):
 
 @permission_required('gym_app.view_membershiphistory')
 def membership_history(request):
+    """Requires 'view_membershiphistory' permission. Returns whole membership history. Allows user to filter
+    the history by purchase date."""
+
     if request.method == 'POST':
         selected_date = request.POST.get('selected_date')
         history = MembershipHistory.objects.filter(purchase_date=selected_date)
@@ -206,6 +241,9 @@ def membership_history(request):
 
 
 class TrainingRegisterView(LoginRequiredMixin, View):
+    """Login is required. Can be accessed through calendar view. Allows the user to enroll for the training.
+    Checks if the user has active membership and if the user is already enrolled. Discounts training free spots."""
+
     login_url = "login"
 
     def get(self, request, id):
