@@ -1,18 +1,15 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth import login, logout
-from django.contrib.auth.models import User
 from django.views import View, generic
-from .models import *
 from .forms import *
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, permission_required
 from .utils import Calendar
-from datetime import datetime, timedelta, date
+from datetime import timedelta, date
 from django.utils.safestring import mark_safe
 import calendar
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-import datetime
 
 
 class IndexView(View):
@@ -278,4 +275,3 @@ class TrainingRegisterView(LoginRequiredMixin, View):
             return redirect('index')
         else:
             return render(request, 'training_register.html', {'form': form, 'training': training})
-
