@@ -218,7 +218,7 @@ def membership_info(request):
         user_profile = UserMembership.objects.get(user=request.user)
     except UserMembership.DoesNotExist:
         return HttpResponse('Membership does not exist.')
-    history = MembershipHistory.objects.filter(user_membership__user=request.user)
+    history = MembershipHistory.objects.filter(user_membership__user=request.user).order_by('-purchase_date')
     ctx = {
         'user_profile': user_profile,
         'history': history
