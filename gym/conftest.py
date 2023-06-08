@@ -1,6 +1,6 @@
 import pytest
 from django.test import Client
-from gym_app.models import Training, Membership, User, Profile
+from gym_app.models import Training, User, UserMembership
 
 
 @pytest.fixture
@@ -9,41 +9,24 @@ def client():
 
 
 @pytest.fixture
-def trainers():
-    trainer = User.objects.create(
-        username='trainer',
-        password='trainer',
-        password_rep='trainer',
-        first_name='trainer',
-        last_name='trainer',
-        email='trainer@test.com',
-    )
-    trainer.groups.add(name='Trainer')
-    return trainer
+def user():
+    return User.objects.create_user(username='testuser', password='testpassword')
 
 
 @pytest.fixture
-def membership():
-    m = Membership.objects.create(
-        name='Daily',
-        duration=1,
-        price=10.00
+def training():
+    return Training.objects.create(
+        title='Test Training',
+        description='Test Description',
+        capacity=10,
+        start_time='2023-06-01 10:00:00',
+        end_time='2023-06-01 12:00:00'
     )
-    return m
 
 
 @pytest.fixture
-def profile():
-    u = User.objects.create(
-        username='tester',
-        password='tester',
-        first_name='tester',
-        last_name='tester',
-        email='tester@test.com',
+def active_membership(user):
+    return UserMembership.objects.create(
+        user=user,
+        expiration_date='2024-06-01'
     )
-    u.profile.sex = '1'
-    u.profile.height = 165
-    u.profile.weight = 60
-    u.profile.age = 20
-    u.save()
-    return u
